@@ -1,0 +1,25 @@
+# Python environments and generated files
+.venv*/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+*.log
+
+# Credentials and user-uploaded data
+.env
+.env.*
+.streamlit/secrets.toml
+uploads/
+private_data/
+
+# Editor / OS files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Submission archives are distributed separately
+*.zip

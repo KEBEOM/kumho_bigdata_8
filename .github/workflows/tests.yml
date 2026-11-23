@@ -1,0 +1,51 @@
+name: Python compatibility
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**.py'
+      - 'requirements*.txt'
+      - 'sample.xlsx'
+      - 'data/**'
+      - '.streamlit/**'
+      - '.github/workflows/tests.yml'
+  pull_request:
+    paths:
+      - '**.py'
+      - 'requirements*.txt'
+      - 'sample.xlsx'
+      - 'data/**'
+      - '.streamlit/**'
+      - '.github/workflows/tests.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.9', '3.10', '3.11', '3.12', '3.13', '3.14']
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
+            requirements-dev.txt
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-dev.txt
+      - name: Check statistics and app
+        run: python -m pytest -q tests

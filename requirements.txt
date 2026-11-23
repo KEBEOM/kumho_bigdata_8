@@ -1,0 +1,10 @@
+# Python 3.9–3.14: pip selects compatible releases for the active interpreter.
+# Python 3.9.7 is excluded by Streamlit; use another supported patch version.
+streamlit>=1.50,<1.68
+pandas>=2.2,<3
+numpy>=1.26,<2.4
+scipy>=1.11,<1.18
+statsmodels>=0.14.4,<0.16
+openpyxl>=3.1.2,<4
+xlrd>=2.0.1,<3
+plotly>=5.24,<7.2
