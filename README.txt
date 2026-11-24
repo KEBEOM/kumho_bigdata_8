@@ -11,15 +11,20 @@ GitHub 소스를 Streamlit Community Cloud에 배포하면 PC를 켜 두지 않�
 앱 실행 중 자료를 생성형 AI 서비스에 전송하지 않습니다.
 
 GitHub 연동 및 온라인 배포
+앱 실행 주소: https://4mlyngvxcnuchcxkbzspn8.streamlit.app/
+소스 저장소: https://github.com/KEBEOM/kumho_bigdata_8
+PC와 스마트폰 브라우저에서 앱 실행 주소를 엽니다. 이용자는 로그인이나 Python 설치가 필요 없습니다.
+2026-11-24 배포 완료: 로그인 없는 접속, 기준 데이터 표시, 다중회귀와 엑셀 다운로드 동작 확인.
+현재 배포는 Streamlit 기본 Python 설정을 사용했습니다. 정확한 서버 버전은 별도 확인하지 않았습니다.
 README.md와 docs/GITHUB_DEPLOY.md를 참고합니다.
 GitHub 저장소 최상위에 app.py, requirements.txt, sample.xlsx와 나머지 소스를 함께 올립니다.
 Streamlit 배포: Branch=main, Main file path=app.py, Python=3.12 권장, Secrets는 비워 둡니다.
 3.12는 배포 서버의 선택값이며 로컬 버전을 제한하는 요구사항이 아닙니다.
 ZIP만 GitHub에 올리지 말고 압축을 푼 소스를 올립니다. start.py는 로컬 실행용입니다.
 앱 코드를 수정하면 GitHub Actions에서 Python 3.9~3.14 검사를 실행하도록 설정했습니다.
-실제 원격 검사 상태와 배포 성공 여부는 GitHub Actions와 Streamlit 화면에서 확인합니다.
+원격 GitHub Actions의 성공 여부는 별도 확인하지 않았습니다. 실제 배포 확인 범위는 docs/배포확인.md에 기록했습니다.
 
-가장 쉬운 실행 방법
+내 컴퓨터에 설치해서 실행하는 방법
 64비트 CPython 3.9~3.14 중 하나가 설치되어 있으면 됩니다. 특정 3.12 버전을 요구하지 않습니다.
 Streamlit이 제외한 Python 3.9.7은 지원하지 않습니다. 3.9의 다른 패치 버전 또는 3.10~3.14를 사용합니다.
 Python 3.8 이하, 3.15 이상, PyPy 및 32비트 Python은 이번 지원 범위에 포함하지 않습니다.
@@ -59,6 +64,8 @@ py 명령이 없고 python 명령만 있다면 python start.py를 사용합니�
 - 최초 설치 전부터 오프라인인 경우에는 필요한 패키지를 받을 수 없습니다.
 
 스마트폰으로 보기
+온라인: 위 앱 실행 주소를 스마트폰 브라우저에서 엽니다. PC를 켜 두거나 같은 Wi-Fi를 사용할 필요가 없습니다.
+아래는 클라우드 대신 내 PC에서 실행한 앱에 연결하는 방법입니다.
 1. PC와 스마트폰을 같은 Wi-Fi에 연결합니다.
 2. PC에서 앱을 다음처럼 켭니다.
    macOS/Linux: bash run_mac_linux.sh --lan

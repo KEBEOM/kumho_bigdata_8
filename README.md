@@ -2,7 +2,11 @@
 
 **은수현 · 김정훈 · 김응범**의 데이터분석 웹앱 과제입니다. 엑셀과 CSV를 불러와 통계분석, 그래프, 한국어 해석을 확인하고 결과를 내려받습니다.
 
-Streamlit Community Cloud에 배포하면 PC와 스마트폰에서 실행 주소로 접속할 수 있습니다. 이용자는 Python을 설치할 필요가 없습니다. 개발용 PC에서 직접 실행하는 방식도 지원합니다.
+**[앱 바로 실행하기](https://4mlyngvxcnuchcxkbzspn8.streamlit.app/)** · [GitHub 소스](https://github.com/KEBEOM/kumho_bigdata_8)
+
+Streamlit Community Cloud에 배포했습니다. PC와 스마트폰 브라우저에서 위 실행 주소로 접속합니다. 이용자는 로그인이나 Python 설치가 필요 없습니다. 개발용 PC에서 직접 실행하는 방식도 지원합니다.
+
+2026-11-24에 로그인 없는 접속, 36사례·14변수 표시, 다중회귀 R²=0.9349, 결과 엑셀 다운로드 동작을 확인했습니다. 검증 범위는 [배포 확인 기록](docs/배포확인.md)에 있습니다.
 
 ## 분석 기능
 

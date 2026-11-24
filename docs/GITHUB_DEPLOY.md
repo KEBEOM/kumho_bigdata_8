@@ -2,6 +2,15 @@
 
 팀원: 은수현, 김정훈, 김응범
 
+## 현재 배포 상태 · 2026-11-24
+
+- **[데이터 한눈에 실행](https://4mlyngvxcnuchcxkbzspn8.streamlit.app/)**: 로그인 없이 이용 가능합니다.
+- **[GitHub 저장소](https://github.com/KEBEOM/kumho_bigdata_8)**: 공개 저장소, `main` 브랜치의 루트 `app.py`를 배포했습니다.
+- 현재 서버는 Streamlit 기본 Python 설정을 사용했습니다. 정확한 버전은 별도 확인하지 않았으며, 아래의 3.12는 새로 배포할 때의 권장값입니다.
+- 기준 데이터와 다중회귀 실행을 확인했습니다. 구체적인 결과와 미확인 항목은 [배포 확인 기록](배포확인.md)에 있습니다.
+
+아래는 다른 계정에서 다시 배포하거나 설정을 확인할 때 참고할 절차입니다.
+
 ## 1. GitHub에 소스 올리기
 
 1. 이 과제의 저장소는 [KEBEOM/kumho_bigdata_8](https://github.com/KEBEOM/kumho_bigdata_8)입니다. 다른 계정에서 새로 배포하는 경우 별도 저장소를 만듭니다.
@@ -41,9 +50,9 @@ GitHub의 배포 브랜치(`main`)에 수정 사항을 저장하면 Streamlit이
 
 - 기존 제출물 두 ZIP: 마스터·코딩 프롬프트 / 전체 소스
 - 실제 생성된 GitHub 저장소 주소
-- 배포 성공 후의 앱 실행 주소
+- 앱 실행 주소: https://4mlyngvxcnuchcxkbzspn8.streamlit.app/
 - GitHub Actions 결과와 앱 시연 화면
 
 공식 안내: [배포 절차](https://docs.streamlit.io/deploy/streamlit-community-cloud/deploy-your-app/deploy), [GitHub 연결](https://docs.streamlit.io/deploy/streamlit-community-cloud/get-started/connect-your-github-account).
 
-저장소가 비공개이면 권한이 있는 계정만 소스를 볼 수 있습니다. 교수님께 소스를 공유할 때는 저장소의 공개 범위 또는 초대 여부를 별도로 정합니다. 앱의 공개 범위는 Streamlit 설정에서 확인합니다.
+현재 저장소는 공개 상태이며 앱도 로그인 없는 접속을 확인했습니다. 향후 공개 범위를 변경하면 소스와 앱의 접근 가능 여부를 각각 다시 확인합니다.
