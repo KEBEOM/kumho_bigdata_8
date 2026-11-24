@@ -22,7 +22,7 @@ Streamlit Community Cloud에 배포했습니다. PC와 스마트폰 브라우저
 
 기본으로 제공하는 36사례 가상 데이터만으로 모든 분석을 연습할 수 있습니다. 자신의 자료는 `.xlsx`, `.xls`, `.csv` 형식으로 올립니다. 제한은 10MB, 10,000행, 100열입니다.
 
-![다중회귀 실행 화면](docs/screenshots/03_PC_다중회귀.jpg)
+v1.2에서는 네이비·민트 색상의 대시보드, PC의 2열 설정 카드, 모바일의 세로 배치와 넉넉한 상단 여백을 적용했습니다. `docs/screenshots/`의 이미지는 v1.1 화면 기록이며 현재 화면은 위 실행 링크에서 확인합니다.
 
 ## 내 컴퓨터에서 실행
 
@@ -70,6 +70,8 @@ python -m pip install -r requirements-dev.txt
 python -m pytest -q tests
 ```
 
+v1.2 화면 수정 후에는 Python 3.12.14에서 Streamlit 1.50.0·1.67.0 각각 기존 59개 검사를 다시 통과했습니다. 320px·390px 브라우저 프레임에서 좁은 화면 배치도 확인했습니다.
+
 GitHub Actions 설정은 코드 변경 시 6개 Python 버전을 검사하도록 구성했습니다. 원격 실행 결과는 저장소의 **Actions → Python compatibility**에서 확인합니다. 로컬 검사와 원격 Actions 실행 결과는 구분합니다.
 
 ## 파일 안내
@@ -78,6 +80,7 @@ GitHub Actions 설정은 코드 변경 시 6개 Python 버전을 검사하도록
 |---|---|
 | `app.py` | 화면, 입력, 결과 표시와 다운로드 |
 | `analysis.py` | 통계 계산과 검증 |
+| `ui.py`, `assets/` | 브랜드 화면, 반응형 스타일, 장식 그래픽 |
 | `data_io.py` | 엑셀·CSV 읽기와 결과 내보내기 |
 | `start.py`, 실행 스크립트 | 로컬 환경 준비와 실행 |
 | `sample.xlsx` | 가상 기준 데이터 |
