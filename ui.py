@@ -8,12 +8,14 @@ import streamlit as st
 
 METHOD_NOTES = {
     '기초통계': ('데이터의 첫인상', '평균과 분포, 빈도표로 데이터의 전체 모습을 살펴보세요.'),
+    '상관관계': ('함께 변하는 정도', 'Pearson·Spearman 계수와 쌍별 사례 수, Holm 보정 p값을 살펴보세요.'),
     '단순회귀': ('두 변수의 관계', '하나의 설명변수가 결과변수와 어떤 관계가 있는지 확인하세요.'),
     '다중회귀': ('함께 설명하는 변수들', '여러 설명변수의 관계를 함께 고려하고, 설명력과 계수를 비교하세요.'),
     '일원분산분석': ('집단 사이의 차이', '한 가지 기준으로 나눈 집단의 평균을 비교하세요.'),
     '이원분산분석': ('두 요인의 영향', '두 집단 요인의 주효과와 상호작용을 함께 살펴보세요.'),
     '매개효과': ('관계가 이어지는 경로', 'X에서 M을 거쳐 Y로 이어지는 간접적 연관을 살펴보세요.'),
     '조절효과': ('조건에 따라 달라지는 관계', 'W의 수준에 따라 X와 Y의 관계가 달라지는지 확인하세요.'),
+    '구조방정식 / CFA': ('관측지표에서 잠재변수로', '여러 지표로 개념을 측정하고, 측정모형과 잠재변수 사이의 경로를 살펴보세요.'),
 }
 
 
@@ -39,7 +41,7 @@ def render_header():
         <span class="hero-kicker"><span class="status-dot"></span> FROM DATA TO INSIGHT</span>
         <h1 id="app-title">데이터 <span>한눈에.</span></h1>
         <p class="hero-description">복잡한 숫자에서, 명확한 발견으로.<br>데이터를 고르고 분석하면, 이해하기 쉬운 결과가 펼쳐집니다.</p>
-        <div class="hero-tags"><span>7가지 통계 분석</span><span>Excel · CSV</span><span>결과 다운로드</span></div>
+        <div class="hero-tags"><span>9가지 분석 메뉴</span><span>상관 · 회귀 · SEM</span><span>Excel · CSV</span></div>
       </div>
       <div class="hero-art" aria-hidden="true">
         <div class="art-label">EXPLORE THE PATTERN<span>↗</span></div>
@@ -69,5 +71,5 @@ def render_empty_result():
 
 
 def render_footer():
-    st.html('''<footer class="app-footer"><span><strong>DATA LAB</strong> 데이터 한눈에 · v1.2</span>
+    st.html('''<footer class="app-footer"><span><strong>DATA LAB</strong> 데이터 한눈에 · v1.3</span>
     <span>은수현 · 김정훈 · 김응범 <span class="footer-separator">/</span> AI 도움으로 개발한 교육용 앱</span></footer>''')

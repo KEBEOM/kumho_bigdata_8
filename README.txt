@@ -1,9 +1,9 @@
-데이터 한눈에 v1.2
+데이터 한눈에 v1.3
 AI와 함께 만드는 스마트폰 PC 통계분석 웹앱
 제출자: 은수현, 김정훈, 김응범
 
 무엇을 하는 앱인가요?
-엑셀/CSV를 읽어 7가지 분석과 그래프, 쉬운 해석을 제공하는 교육용 웹앱입니다.
+엑셀/CSV를 읽어 9가지 분석 메뉴와 그래프, 쉬운 해석을 제공하는 교육용 웹앱입니다.
 PC에서 프로그램을 켜고 PC 또는 같은 Wi-Fi의 스마트폰 브라우저로 접속할 수 있습니다.
 GitHub 소스를 Streamlit Community Cloud에 배포하면 PC를 켜 두지 않고 배포 주소로 접속할 수 있습니다.
 배포된 앱 이용자는 Python 설치가 필요하지 않습니다. APK나 iPhone 설치 파일은 아닙니다.
@@ -149,7 +149,7 @@ CSV는 UTF-8 또는 CP949를 지원합니다. 표준 쉼표 구분 파일을 사
 이미 별도 가상환경을 준비한 경우:
   python -m pip install -r requirements-dev.txt
   python -m pytest -q tests
-Python별 검증 결과는 docs/호환성보고서.md, 실제 설치 버전은 docs/호환성검증.json에 기록했습니다.
+Python별 검증 결과는 docs/호환성보고서.md, v1.3의 실제 설치 버전은 docs/v1.3_호환성검증.json에 기록했습니다.
 통계 기준값은 docs/검산보고서.html과 docs/기준값_검산표.csv에서 확인합니다.
 교수자 기준표 원문은 data/교수자_기준결과_원문.md입니다.
 기준값은 반올림 정밀도 안에서 비교합니다. p=0.000000 표기는 정확한 0을 뜻하지 않습니다.
@@ -207,3 +207,22 @@ Linux의 ensurepip/venv 없음: 운영체제에서 해당 Python의 venv 지원 
 https://www.statsmodels.org/stable/generated/statsmodels.stats.anova.anova_lm.html
 https://www.statsmodels.org/stable/generated/statsmodels.stats.multicomp.pairwise_tukeyhsd.html
 https://docs.streamlit.io/develop/api-reference/data/st.dataframe
+
+
+v1.3 상관관계 및 구조방정식 확장 (2026-11-26)
+- 상관관계: 기준 데이터 → 상관관계 → Pearson 또는 Spearman → 분석 실행.
+  쌍별/공통 완전사례, 쌍별 n·양측 p·Holm 보정 p, 상관행렬을 확인합니다.
+  Pearson 95% CI를 제공하며 Spearman 소표본은 순열검정을 사용합니다.
+- 구조방정식: 구조방정식 예제로 연습 → 분석 실행.
+  300사례·9지표 가상 자료이며 교수자 36사례 기준 자료와 다릅니다. 실제 학생 자료가 아닙니다.
+  기본은 X→M→Y와 X→Y의 잠재변수 모형입니다. X/Y 2변수 모형과 2·3요인 CFA도 선택할 수 있습니다.
+  각 요인에 지표 3~6개를 배정하고 첫 지표의 비표준화 부하량을 1로 고정합니다.
+  연속형·독립 관측·다변량 정규성을 전제로 MLW로 계산합니다.
+  적합도, 표준화·비표준화 부하량과 경로, B의 SE·p·95% CI, R²와 경로도를 표시합니다.
+  CFI/TLI는 원값이라 1보다 클 수 있습니다. RMSEA는 N−1 규약입니다.
+  최소 50사례는 실행 제한이며 표본 적정성을 보장하지 않습니다.
+  순서형 전용 추정, 다집단·다층, 교차부하, 잔차 상관, 평균구조, 잠재 간접효과 검정은 미지원입니다.
+  기존 매개효과 메뉴는 관측변수 회귀 기반이며 잠재변수 SEM과 구분합니다.
+- 모형 선택·지표·설정 변경 후에는 다시 분석 실행을 누릅니다. 표와 안내를 XLSX/TXT로 받습니다.
+- 자세한 계산식·한계: docs/상관분석_구조방정식_안내.md
+- 검증 기록: docs/v1.3_검증보고서.md, docs/v1.3_호환성검증.json

@@ -58,7 +58,7 @@ for filename in sys.argv[1:]:
         if req.marker and not req.marker.evaluate(): continue
         if not req.specifier.contains(md.version(req.name),prereleases=False):
             raise RuntimeError('호환 범위를 벗어난 패키지: '+req.name)
-for module in ['streamlit','pandas','numpy','scipy','statsmodels.api','openpyxl','xlrd','plotly']:
+for module in ['streamlit','pandas','numpy','scipy','statsmodels.api','openpyxl','xlrd','plotly','semopy']:
     importlib.import_module(module)
 '''
     try:

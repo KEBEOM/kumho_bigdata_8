@@ -11,17 +11,31 @@ import streamlit as st
 from analysis import (AnalysisError, numeric_series, descriptive_statistics, frequency_table,
     regression, one_way_anova, two_way_anova, mediation, moderation, format_p)
 from data_io import read_data, excel_sheets, export_excel
+from advanced_analysis import correlation_analysis, latent_variable_analysis, SEM_TEMPLATES
+from advanced_ui import matrix_table, correlation_heatmap, latent_diagram
 from ui import inject_styles, render_header, section_title, analysis_hint, render_empty_result, render_footer
 
 ROOT = Path(__file__).resolve().parent
-MODES = ['기초통계','단순회귀','다중회귀','일원분산분석','이원분산분석','매개효과','조절효과']
+MODES = ['기초통계','상관관계','단순회귀','다중회귀','일원분산분석','이원분산분석','매개효과','조절효과','구조방정식 / CFA']
+
+
+def source_changed():
+    if st.session_state.get('data_source') == '구조방정식 예제로 연습':
+        st.session_state.analysis_mode = '구조방정식 / CFA'
+
+
+def mode_changed():
+    if st.session_state.get('analysis_mode') == '구조방정식 / CFA' and st.session_state.get('data_source') == '기준 데이터로 연습':
+        st.session_state.data_source = '구조방정식 예제로 연습'
+
+
 st.set_page_config(page_title='데이터 한눈에 | 통계분석',page_icon='📊',layout='wide')
 inject_styles()
 render_header()
 with st.container(key='guide'):
     with st.expander('처음 사용하시나요? 실행 순서와 분석 안내'):
         st.write('① 기준 데이터로 먼저 연습하세요. ② 분석 종류를 고릅니다. ③ 변수와 설정을 확인한 뒤 분석 실행을 누릅니다. ④ 결과표와 해석을 내려받습니다.')
-        st.write('기초통계: 분포 요약 · 회귀: 수치형 변수 간 관계 · 분산분석: 집단 평균 비교 · 매개: X–M–Y의 간접적 연관 · 조절: W에 따라 X–Y 관계가 달라지는지 확인')
+        st.write('기초통계: 분포 요약 · 상관: 두 변수의 선형·단조 관계 · 회귀: 수치형 변수 간 관계 · 분산분석: 집단 평균 비교 · 매개: X–M–Y의 간접적 연관 · 조절: W에 따라 X–Y 관계가 달라지는지 확인 · 구조방정식/CFA: 관측지표로 측정한 잠재변수의 모형')
         st.caption('업로드 자료는 앱이 실행되는 서버에서 계산합니다. 로컬 실행 시 내 PC, 클라우드 접속 시 배포 서버로 전달됩니다. 앱은 자료를 AI 서비스로 보내거나 별도 파일로 자동 저장하지 않습니다. 샘플은 가상 데이터입니다.')
 
 with st.container(key='workspace'):
@@ -29,7 +43,7 @@ with st.container(key='workspace'):
     with data_column:
         with st.container(key='data_panel'):
             section_title('01', '데이터 준비', '기준 데이터로 시작하거나, 내 파일을 불러오세요.')
-            source = st.radio('데이터 선택',['기준 데이터로 연습','내 파일 업로드'],horizontal=True)
+            source = st.radio('데이터 선택',['기준 데이터로 연습','구조방정식 예제로 연습','내 파일 업로드'],horizontal=True,key='data_source',on_change=source_changed)
             try:
                 if source == '기준 데이터로 연습':
                     raw = (ROOT/'sample.xlsx').read_bytes()
@@ -37,6 +51,13 @@ with st.container(key='workspace'):
                     source_name = '교수자 제공 기준 데이터 · 36사례'
                     st.download_button('연습용 엑셀 받기',raw,'sample.xlsx',mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',width='stretch',icon=':material/download:')
                     sheet_name = 'Sheet1'
+                elif source == '구조방정식 예제로 연습':
+                    raw = (ROOT/'data'/'sem_sample.csv').read_bytes()
+                    df = read_data(raw,'sem_sample.csv')
+                    source_name = '개발자가 생성한 구조방정식 가상 예제 · 300사례 (교수자 기준 자료와 별도)'
+                    sheet_name = 0
+                    st.download_button('구조방정식 예제 받기',raw,'sem_sample.csv',mime='text/csv',width='stretch',icon=':material/download:')
+                    st.caption('연속형 가상 지표: x1–x3=학습지원(X), m1–m3=학습몰입(M), y1–y3=학습성과(Y). 실제 학생이나 설문 자료가 아닙니다.')
                 else:
                     uploaded = st.file_uploader('엑셀 또는 CSV 파일',type=['xlsx','xls','csv'],help='10MB 이하 · 첫 행은 중복되지 않는 열 이름 · 최대 10,000행/100열')
                     if uploaded is None:
@@ -73,7 +94,7 @@ with st.container(key='workspace'):
     with analysis_column:
         with st.container(key='analysis_panel'):
             section_title('02', '분석 설정', '궁금한 질문에 맞는 분석과 변수를 선택하세요.')
-            mode = st.selectbox('분석 종류',MODES,key='analysis_mode')
+            mode = st.selectbox('분석 종류',MODES,key='analysis_mode',on_change=mode_changed)
             analysis_hint(mode)
             if st.session_state.get('mode') != mode:
                 st.session_state.mode = mode
@@ -99,6 +120,28 @@ with st.container(key='workspace'):
                                        index=all_columns.index('method')+1 if 'method' in all_columns else 0,key='sel_freq')
                     params['category'] = None if cat=='사용 안 함' else cat
                     st.caption('표준편차는 표본 표준편차(n−1)입니다. 기초통계는 열마다 유효 사례 수가 다를 수 있습니다.')
+                elif mode == '상관관계':
+                    defaults = [c for c in ['score','study_time','pre_score'] if c in numeric] or numeric[:3]
+                    params['columns'] = st.multiselect('상관분석 변수 (2~10개)',numeric,default=defaults,key='sel_corr_columns')
+                    params['method'] = st.selectbox('상관계수',['Pearson','Spearman'],key='sel_corr_method')
+                    missing_mode = st.selectbox('결측 처리',['쌍별 결측 제외','선택 변수 공통 완전사례'],key='sel_corr_missing')
+                    params['missing'] = 'pairwise' if missing_mode=='쌍별 결측 제외' else 'listwise'
+                    if params['method']=='Spearman':
+                        params['seed'] = int(st.number_input('순열검정 시드',min_value=0,max_value=2147483647,value=42,key='sel_corr_seed'))
+                        st.caption('n≤7 전수 순열 · 8~500사례는 4,999회 순열 · 500 초과는 근사 검정. 모든 p값은 양측 검정입니다.')
+                    st.caption('변수 쌍별 사례 수와 Holm 보정 p를 표시합니다. Pearson에는 Fisher 95% CI를 제공합니다.')
+                elif mode == '구조방정식 / CFA':
+                    params['template'] = st.selectbox('잠재변수 모형',list(SEM_TEMPLATES),index=1,key='sel_sem_template')
+                    params['factors'] = {}
+                    for i,factor in enumerate(SEM_TEMPLATES[params['template']]):
+                        default_items = [f'{factor.lower()}{j}' for j in range(1,4) if f'{factor.lower()}{j}' in numeric]
+                        if not default_items:
+                            default_items = numeric[i*3:i*3+3]
+                        params['factors'][factor] = st.multiselect(f'잠재변수 {factor}의 관측지표 (3~6개)',numeric,default=default_items,key='sel_sem_'+factor)
+                    st.caption('각 지표는 한 요인에만 배정하세요. 첫 지표의 부하량을 1로 고정합니다. 최소 50사례는 앱의 실행 제한이며 충분한 표본을 뜻하지 않습니다.')
+                    with st.expander('구조방정식의 지원 범위'):
+                        st.write('연속형 지표의 2·3요인 CFA와 2·3잠재변수 구조모형을 제공합니다. MLW 추정, 표준화 요인부하량·경로계수, χ²·CFI·TLI·RMSEA를 확인할 수 있습니다.')
+                        st.caption('순서형 전용 추정, 다집단·다층모형, 교차부하, 잔차 상관, 평균구조, 잠재변수 간접효과의 검정은 지원하지 않습니다. 수업의 모든 구조방정식 모형을 대체하지 않습니다.')
                 elif mode in ('단순회귀','다중회귀'):
                     params['y'] = pick('결과변수 Y',numeric,'score','y')
                     options = [c for c in numeric if c!=params['y']]
@@ -152,6 +195,10 @@ with st.container(key='workspace'):
                                 raise AnalysisError('수치형 변수 또는 빈도표 변수를 선택해 주세요.')
                             result = {'description':descriptive_statistics(df,params['columns']) if params['columns'] else pd.DataFrame(),
                                       'frequency':frequency_table(df,params['category']) if params['category'] else pd.DataFrame()}
+                        elif mode == '상관관계':
+                            result = correlation_analysis(df,**params)
+                        elif mode == '구조방정식 / CFA':
+                            result = latent_variable_analysis(df,**params)
                         elif mode in ('단순회귀','다중회귀'):
                             if mode=='다중회귀' and len(params['xs']) < 2:
                                 raise AnalysisError('다중회귀의 설명변수는 2개 이상 선택해 주세요. 1개이면 단순회귀 메뉴를 사용하세요.')
@@ -189,11 +236,11 @@ with st.container(key='results_panel'):
         tables[title] = data
 
 
-    def chart(fig):
+    def chart(fig,height=340):
         fig.update_layout(template='plotly_white',font=dict(family='Inter, Apple SD Gothic Neo, Malgun Gothic, sans-serif',size=12,color='#52647b'),
                           colorway=['#0b8b79','#607aab','#d6a14a','#9178ae'],
                           paper_bgcolor='#ffffff',plot_bgcolor='#ffffff',
-                          margin=dict(l=10,r=10,t=35,b=10),height=340,
+                          margin=dict(l=10,r=10,t=35,b=10),height=height,
                           legend=dict(orientation='h',y=-.25))
         fig.update_xaxes(gridcolor='#edf1f6',zerolinecolor='#e2e9f1',linecolor='#e2e9f1')
         fig.update_yaxes(gridcolor='#edf1f6',zerolinecolor='#e2e9f1',linecolor='#e2e9f1')
@@ -205,7 +252,7 @@ with st.container(key='results_panel'):
         notes.append(text)
 
 
-    if mode!='기초통계':
+    if mode not in ('기초통계','상관관계'):
         st.success(f'전체 {r["total"]}사례 중 {r["n"]}사례 사용 · 선택 변수의 결측/무한대로 {r["dropped"]}사례 제외')
         notes.append(f'전체 {r["total"]}, 사용 {r["n"]}, 제외 {r["dropped"]}; 선택 변수 완전사례 분석')
 
@@ -223,6 +270,40 @@ with st.container(key='results_panel'):
             chart(px.bar(r['frequency'].head(30),x='범주',y='빈도',title=f'{params["category"]} 빈도 (상위 30개)'))
             notes.append('전체 비율은 결측 포함 전체 행 수, 유효 비율은 결측 제외 행 수가 분모입니다.')
         notes.append('표본 표준편차 ddof=1; 무한대는 결측으로 처리. 사례 1개이면 표준편차는 계산 불가입니다.')
+    elif mode == '상관관계':
+        st.caption(f'전체 {r["total"]}사례 · 선택 변수 공통 완전사례 {r["complete_n"]}사례 · 각 쌍의 사용/제외 사례는 아래 표에서 확인하세요.')
+        chart(correlation_heatmap(r),height=max(380,len(params['columns'])*40+160))
+        show_table('변수 쌍별 상관분석',r['pairs'])
+        show_table('상관계수 행렬',matrix_table(r['correlation']))
+        show_table('쌍별 유효 사례 수',matrix_table(r['counts']))
+        tables['p값 행렬'] = matrix_table(r['pvalues'])
+        tables['Holm 보정 p 행렬'] = matrix_table(r['adjusted_pvalues'])
+        interpretation(f'{r["method"]} 상관분석입니다. 부호는 관계의 방향, 절댓값은 선형(Pearson) 또는 단조(Spearman) 관계의 정도를 나타냅니다. 여러 쌍을 비교할 때는 Holm 보정 p를 함께 보세요. 상관은 인과관계를 뜻하지 않습니다.')
+    elif mode == '구조방정식 / CFA':
+        fit = r['fit_values']
+        c1,c2,c3 = st.columns(3)
+        for col,name in zip([c1,c2,c3],['CFI','TLI','RMSEA']):
+            col.metric(name,'—' if not np.isfinite(fit[name]) else f'{fit[name]:.4f}')
+        st.caption('CFI·TLI는 보정하지 않은 원값으로 1을 넘을 수 있습니다. RMSEA는 N−1 분모를 사용합니다. 적합도는 인과관계의 증거가 아닙니다.')
+        show_table('모형 적합도',r['fit'])
+        chart(latent_diagram(r),height=320)
+        st.caption('그림의 값은 표준화 추정치입니다. CFA의 양방향 화살표는 잠재변수 상관, 구조모형의 단방향 화살표는 경로계수입니다. 지표별 측정 관계는 아래 요인부하량 표에서 확인합니다.')
+        show_table('측정모형 요인부하량',r['loadings'])
+        if not r['paths'].empty:
+            show_table('잠재변수 구조경로',r['paths'])
+            show_table('잠재변수 설명력',r['r_squared'])
+        show_table('분산과 공분산',r['variances'])
+        with st.expander('모형과 공분산 검토'):
+            st.code(r['syntax'],language='text')
+            st.dataframe(r['mapping'],hide_index=True,width='stretch')
+            st.caption('위 모형문은 안전한 내부 변수 이름입니다. 대응표에서 실제 열 이름을 확인하세요.')
+            st.dataframe(matrix_table(r['residual_covariance']),hide_index=True,width='stretch')
+        tables['변수 대응표'] = r['mapping']
+        tables['관측 공분산'] = matrix_table(r['observed_covariance'])
+        tables['추정 공분산'] = matrix_table(r['implied_covariance'])
+        tables['공분산 잔차'] = matrix_table(r['residual_covariance'])
+        notes.append('모형문 (내부 변수 대응표 참고):\n'+r['syntax'])
+        interpretation('선택한 모형이 수렴했습니다. 측정모형의 부하량, 구조경로와 여러 적합도 지수를 함께 검토하세요. 적합도가 높아도 인과관계나 모형의 유일한 정답을 입증하지 않습니다. 모수의 p와 95% CI는 비표준화 B에 대한 값입니다.')
     elif mode in ('단순회귀','다중회귀'):
         a,b = st.columns(2)
         a.metric('R²',f'{r["r2"]:.4f}'); b.metric('수정 R²',f'{r["adj_r2"]:.4f}')

@@ -8,3 +8,5 @@ statsmodels>=0.14.4,<0.16
 openpyxl>=3.1.2,<4
 xlrd>=2.0.1,<3
 plotly>=5.24,<7.2
+# Fixed SEM engine API; its scientific dependencies follow the active Python.
+semopy==2.3.11
