@@ -22,7 +22,8 @@ Streamlit 배포: Branch=main, Main file path=app.py, Python=3.12 권장, Secret
 3.12는 배포 서버의 선택값이며 로컬 버전을 제한하는 요구사항이 아닙니다.
 ZIP만 GitHub에 올리지 말고 압축을 푼 소스를 올립니다. start.py는 로컬 실행용입니다.
 앱 코드를 수정하면 GitHub Actions에서 Python 3.9~3.14 검사를 실행하도록 설정했습니다.
-원격 GitHub Actions의 성공 여부는 별도 확인하지 않았습니다. 실제 배포 확인 범위는 docs/배포확인.md에 기록했습니다.
+2026-11-26 GitHub Actions에서도 Python 3.9~3.14의 6개 작업이 각각 82개 검사를 통과했습니다.
+실제 배포 확인 범위는 docs/배포확인.md, 원격 검사 기록은 docs/v1.3_GitHub검증.json에 있습니다.
 
 내 컴퓨터에 설치해서 실행하는 방법
 64비트 CPython 3.9~3.14 중 하나가 설치되어 있으면 됩니다. 특정 3.12 버전을 요구하지 않습니다.

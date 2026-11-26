@@ -199,3 +199,5 @@ semopy.examples.holzinger39 자료의 3요인 CFA를 lavaan 공개 기준 χ²=8
 별도 큰 가상 표본에서 .65,.55,.30 경로 회복을 확인하고 4개 템플릿, 부적절한 자료, 특수문자 열 이름을 검사해 줘.
 AppTest에 상관·SEM 메뉴와 자료/모형 전환 검사를 추가하고 Python 3.9~3.14에서 전체 검사를 실행해 줘.
 실제 실행 결과만 버전별 기록과 잠금 파일에 남겨 줘. 기존 59개 검사 기록은 과거 버전 기록임을 구분해 줘.
+
+GitHub ubuntu-latest가 Ubuntu 26.04인 환경에서 setup-python은 Python 3.9 설치본을 찾지 못하므로, runs-on을 ${{ matrix.python-version == '3.9' && 'ubuntu-22.04' || 'ubuntu-latest' }}로 설정해 줘. 원격 작업 6개의 성공 여부와 pytest 출력도 확인하여 기록해 줘.

@@ -6,7 +6,7 @@
 
 Streamlit Community Cloud에 배포했습니다. PC와 스마트폰 브라우저에서 위 실행 주소로 접속합니다. 이용자는 로그인이나 Python 설치가 필요 없습니다. 개발용 PC에서 직접 실행하는 방식도 지원합니다.
 
-2026-11-24에 로그인 없는 접속, 36사례·14변수 표시, 다중회귀 R²=0.9349, 결과 엑셀 다운로드 동작을 확인했습니다. 검증 범위는 [배포 확인 기록](docs/배포확인.md)에 있습니다.
+2026-11-26에 공개 v1.3의 Pearson 상관분석과 300사례 잠재변수 SEM 실행을 확인했습니다. 기존 다중회귀와 다운로드는 2026-11-24에 확인했습니다. 검증 범위는 [배포 확인 기록](docs/배포확인.md)에 있습니다.
 
 ## 분석 기능
 
@@ -74,7 +74,7 @@ python -m pytest -q tests
 
 v1.2 화면 수정 후에는 Python 3.12.14에서 Streamlit 1.50.0·1.67.0 각각 기존 59개 검사를 다시 통과했습니다. 320px·390px 브라우저 프레임에서 좁은 화면 배치도 확인했습니다.
 
-GitHub Actions 설정은 코드 변경 시 6개 Python 버전을 검사하도록 구성했습니다. 원격 실행 결과는 저장소의 **Actions → Python compatibility**에서 확인합니다. 로컬 검사와 원격 Actions 실행 결과는 구분합니다.
+GitHub Actions 설정은 코드 변경 시 6개 Python 버전을 검사하도록 구성했습니다. 2026-11-26 [GitHub Actions](https://github.com/KEBEOM/kumho_bigdata_8/actions/runs/45785325209)에서도 6개 Python 버전이 각각 82개 검사를 통과했습니다. 3.9 작업은 Ubuntu 22.04, 나머지는 ubuntu-latest를 사용합니다.
 
 ## 파일 안내
 
